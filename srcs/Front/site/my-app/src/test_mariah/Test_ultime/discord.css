@@ -1,0 +1,193 @@
+
+.containo{
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.new_conv{
+    display: inline-block;
+    position: relative;
+    /* background-color: #2f3136; */
+    /* background-color: rgba(40, 40, 40, 0.5); */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 20%;
+    height: 5vh;
+    border-radius: 3px;
+    /* padding: 5px; */
+    /* border-color: rgba(40, 40, 40, 0); */
+
+}
+
+.chat_title{
+  position: relative;
+    display: inline-block;
+    width: 80%;
+    height:  5vh;
+    background-color: #3b3b41;
+    border-bottom:#19191b;
+     /* align-items: center;
+    justify-content: center;
+    text-align: center; */
+}
+
+.chat_list{
+    overflow-y: auto;
+    display: inline-block;
+    height: 80vh;
+    width: 20%;
+    /* background-color: rgba(40, 40, 40, 0.3); */
+    border-top: 1px solid #19191b;
+}
+
+.my_profile{
+    display: inline-block;
+    height: 20vh;
+    width: 20%;
+    /* background-color: #202225; */
+    background:#19191b;
+}
+
+.chat_content{
+    display: inline-block;
+    width: 60%;
+    height: 90vh;
+    background-color: #3b3b41;
+    color:#aaaaaa;
+    border-top: 1px transparent #19191b;
+}
+
+.chat_profile{
+    display: inline-block;
+    width: 20%;
+    height: 90vh;    
+    /* background-color: #fff; */
+    border-top: 1px transparent #19191b;
+
+}
+
+.chat_bar{
+    display: inline-block;
+    width: 60%;
+    height: 8vh;
+    background-color: #3b3b41;
+}
+
+.button_conv{
+    /* display: flex; */
+    /* margin-top: 5px ; */
+    position: absolute;
+    bottom: 10px; /* Adjust this value to control the distance from the bottom */
+    /* left: 50%;  */
+    background:#19191b;
+    width: 90%;
+    height: 30px;
+    border: transparent;
+    border-radius: 10%;
+}
+
+.button_div{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(-20%);
+    width: 30%;
+    text-align: center;
+    justify-content: end;
+    align-items: end;
+    background-color:  #3b3b41;
+}
+
+.button_chat_title{
+    background-color:  #3b3b41;
+    border: transparent;
+   width: 20%;
+   height: 30px;
+   /* justify-content: center;*/
+   /* margin-top: 50px; */
+
+}
+
+.msg_pv{
+    color: darkcyan;
+    height: 35px;
+    width: 90%;
+    text-align: start;
+    font-size: 15px;
+    margin-left: 5%;
+    /* background-color: #aaaaaa; */
+    transform: translateY(30%);
+}
+
+.msg_pv_btn{
+    width: 20px;
+    height: 15px;
+    border: none;
+    margin-left: 80px;
+    transform: translateY(30%);
+    transform: translateX(-20%);
+    color: rgb(211, 216, 221);
+    font-size: 15px;
+}
+
+.chat_list button {
+    display: flex;
+    background-color: inherit;
+    color: rgb(15, 14, 14);
+    /* padding: 22px 16px; */
+    width: 20%;
+    border: none;
+    outline: none;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    height: 8%;
+  }
+  
+  /* Change background color of buttons on hover */
+  .chat_list button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current ".chat_list button" class */
+  .chat_list button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the .chat_list content */
+  .tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 70%;
+    border-left: none;
+    height: 100vh;
+    background-color: floralwhite;
+    overflow-y: auto;
+  }
+
+  .netflixintro{
+    display: block;
+    position: relative;
+    width: 300px;
+    height: 300px;
+    animation-name: zoom-in;
+    animation-delay: .5s;
+    animation-duration: 3.5s;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+    background-size: 4000px;
+    &[letter="N"]{
+      transform-origin: 30% center;
+      .helper-1{
+        width: 19.5%;
+        height: 100%;
+        left: 22.4%;
+        top:0;
+        transform: rotate(180deg);
+        animation-name: fading-lumieres-box;
+      }
+    }
+  }
