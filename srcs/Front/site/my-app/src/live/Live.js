@@ -62,7 +62,7 @@ const Live = () => {
             navigate('/home');
         }
     };
-    
+
     const spectatorRoomName = `spectator_${decodedSelectedGame}`;
     socket.emit("spectatorJoin", spectatorRoomName);
 

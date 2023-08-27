@@ -28,7 +28,6 @@ const Pong = () => {
     const paddleSpeed = 20;
     const [playerNumber, setPlayerNumber] = useState(0);
     const [roomName, setRoomName] = useState('');
-    const [gameOverCount, setGameOverCount] = useState(0);
     const [giveUp, setGiveUp] = useState(false);
     const [player1Name, setPlayer1Name] = useState("");
     const [player2Name, setPlayer2Name] = useState("");
@@ -42,7 +41,6 @@ const Pong = () => {
         if (username) {
             socket.auth = { username };
             socket.connect();
-            setGameOverCount(0);
         }
         socket.emit("waiting_player");
         setRoomfull(false);
@@ -326,7 +324,6 @@ const Pong = () => {
     };
 
     const GameOver = () => {
-        setGameOverCount((prevCount) => prevCount + 1);
         socket.emit("game_over", {
             rooms_name: roomName, content: {
                 winner: winner,
