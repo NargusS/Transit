@@ -20,22 +20,6 @@ function Profil() {
 
   let profileToUse = decodedProfile;
 
-  const GetAll = async () => {
-    const URL = "http://" + window.location.hostname + ":4000";
-    const final = URL + "/users/all";
-    fetch(final, {
-      credentials: 'include',
-      method: 'GET',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setVisitor(data.data.find((item) => item.user === profileToUse));
-      })
-  }
-
   const initialAchievements = [
     { id: 1, imgUrl: GotBeatenUp, unlocked: false, text: "Got Beaten Up" },
     { id: 2, imgUrl: PongLooser, unlocked: false, text: "Pong Looser" },
@@ -45,37 +29,6 @@ function Profil() {
   ];
 
   const [achievements, setAchievements] = useState(initialAchievements);
-
-  const updateAchievementUnlockStatus = (achievementIds) => {
-    const idsArray = achievementIds.split("");
-    const updatedAchievements = achievements.map((achievement) =>
-      idsArray.includes(String(achievement.id))
-        ? { ...achievement, unlocked: true }
-        : achievement
-    );
-    setAchievements(updatedAchievements);
-  };
-
-  const GetMe = (name) => {
-    const URL = "http://" + window.location.hostname + ":4000";
-    const final = URL + "/users";
-    fetch(final, {
-      credentials: 'include',
-      method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nickname: name, }),
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      if (data.data.statistic) {
-        setMatchHistory(data.data.statistic.player_history);
-        setAchievementString(data.data.statistic.achievement);
-        setRank(data.data.statistic.rank);
-      }
-    })
-  }
 
   const AddFriend = (name) => {
     const URL = "http://" + window.location.hostname + ":4000";
@@ -139,12 +92,48 @@ function Profil() {
   }
 
   useEffect(() => {
-    GetAll();
+    const URL = "http://" + window.location.hostname + ":4000";
+    const final = URL + "/users/all";
+    fetch(final, {
+      credentials: 'include',
+      method: 'GET',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setVisitor(data.data.find((item) => item.user === profileToUse));
+      })
+
     if (visitor) {
-      GetMe(visitor.user);
+      const URL = "http://" + window.location.hostname + ":4000";
+      const final = URL + "/users";
+      fetch(final, {
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname: visitor.user, }),
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.data.statistic) {
+          setMatchHistory(data.data.statistic.player_history);
+          setAchievementString(data.data.statistic.achievement);
+          setRank(data.data.statistic.rank);
+        }
+      })
     }
-    updateAchievementUnlockStatus(achivementString);
-  }, [visitor, achivementString]);
+    const idsArray = achivementString.split("");
+    const updatedAchievements = achievements.map((achievement) =>
+      idsArray.includes(String(achievement.id))
+        ? { ...achievement, unlocked: true }
+        : achievement
+    );
+    setAchievements(updatedAchievements);
+  }, [visitor, achievements, achivementString, profileToUse]);
 
   return (
     <div>

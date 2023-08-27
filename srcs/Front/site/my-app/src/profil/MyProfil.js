@@ -27,17 +27,6 @@ function MyProfil () {
         {id : 5, imgUrl: PongMaster, unlocked : false, text : "Pong Master"},
     ];
     const [achievements, setAchievements] = useState(initialAchievements);
-
-    const updateAchievementUnlockStatus = (achievementIds) => {
-        const idsArray = achievementIds.split("");
-        const updatedAchievements = achievements.map((achievement) =>
-        idsArray.includes(String(achievement.id))
-            ? { ...achievement, unlocked: true }
-            : achievement
-        );
-        setAchievements(updatedAchievements);
-      };
-
       
       const GetAll = async () =>{
         const URL = "http://" + window.location.hostname + ":4000";
@@ -65,14 +54,26 @@ function MyProfil () {
     const [matchHistory, setMatchHistory] = useState([]);
     const [achivementString, setAchievementString] = useState("");
     const [rank, setRank] = useState(0);
-    const GetMe = (name ) => {
+
+    const handleShowFriends = () => {
+        GetAll();
+        setshowFriends(true);
+      };
+
+
+      const handleShowInviteFriends = () => {
+        GetAll();
+        setshowInviteFriend(true);
+      };
+
+    useEffect(() => {
         const URL = "http://" + window.location.hostname + ":4000";
         const final = URL + "/users";
         fetch(final, {
             credentials: 'include', 
             method: 'POST', 
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ nickname: name,}), 
+            body: JSON.stringify({ nickname: nickname,}), 
           })
           .then((response) => {
               console.log("GETALL: reponse bonne")
@@ -87,23 +88,14 @@ function MyProfil () {
                 setRank(data.data.statistic.rank);
             }
           })
-    }
-
-    const handleShowFriends = () => {
-        GetAll();
-        setshowFriends(true);
-      };
-
-
-      const handleShowInviteFriends = () => {
-        GetAll();
-        setshowInviteFriend(true);
-      };
-
-    useEffect(() => {
-        GetMe(nickname);
-        updateAchievementUnlockStatus(achivementString);
-      }, [achivementString]);
+        const idsArray = achivementString.split("");
+        const updatedAchievements = achievements.map((achievement) =>
+        idsArray.includes(String(achievement.id))
+            ? { ...achievement, unlocked: true }
+            : achievement
+        );
+        setAchievements(updatedAchievements);
+      }, [achivementString, achievements, nickname]);
 
     return (
         <div>
