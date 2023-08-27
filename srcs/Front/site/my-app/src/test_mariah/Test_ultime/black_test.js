@@ -1,22 +1,12 @@
 import { useEffect, useState} from "react";
-// import io from "socket.io-client";
-// import './all.css'
-// import './test.css'
 import './w3school.css'
 import Header from '../../Header';
 import CreateConv from "./CreateConv";
 import { useSocket } from '../../SocketContext'; 
 import {useNavigate} from 'react-router-dom';
 
-
-
 const BeginChat = () => {
   const socket = useSocket();
-    const [list_msg, setContent] = useState([]);
-    // const [isOnline, setIsOnline] = useState(false);
-    // const [conv, setConversation] = useState({});
-    // const [chat, SetChat] = useState
-    // const [username, setUsername] = useState('');
     const [me, setUser] = useState('');
     const [list, setList] = useState([]);
     const [room, SetNewRoom] = useState('');
@@ -25,67 +15,24 @@ const BeginChat = () => {
     const [dm, setActualDm] = useState('');
     const [selectedChannel, SelectChannel] = useState(null);
     const [msg, setMsg] = useState('');
-    const [conversations, setConversations] = useState([{}]);
-    const [exit_gate, setGate] = useState(false);
-    const [filteredItems, setFilteredItems] = useState([]);
     const [showModal, setshowModal] = useState(false);
     const [creatChatModal, setShowModalCreateChat] = useState(false);
-    const [rooms_list, SetRoomList] = useState([]);
     const [channelsList, setChannelsList] = useState([]);
     const [profile, setProfileSelected] = useState({});
-    const [douille, setDouille] = useState(true);
     const [password, SetPwd] = useState('');
     const [verif, SetVerif] = useState('');
     const [checked_pwd, SetChecked] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [displayChannel, SetDisplay] = useState(null);
-    const [list_act, setListActual] = useState([]);
     const [montre, SetMontre] = useState([]);
     const [block, setBlock] = useState([]);
     const [stalk, setStalk] = useState([]);
-
     const navigate = useNavigate();
 
-    const StockMessages = (type, message, receiver, mdp) => {
-      console.log('on est dans StockMessage')
-      console.log(activeTab)
-      console.log("message a stocker = "+ message);
-      console.log(exit_gate);
-      
-      setConversations((prevConversations) => {
-        // Check if the conversation already exists
-        const existingConversation = prevConversations[receiver];
-        
-        if (!existingConversation) {
-          // If it doesn't exist, create a new conversation object
-          return {
-                    ...prevConversations,
-                    [receiver]: {
-                      type: type,
-                      password: mdp,
-                      messages: [message], // Initialize messages with the new message
-                    },
-                  };
-                } else {
-                  // If it exists, update the messages for the receiver
-                  return {
-                    ...prevConversations,
-                    [receiver]: {
-                      ...existingConversation,
-                      messages: [...existingConversation.messages, message],
-                    },
-                  };
-                }
-              });
-              
-            };
-            
             const handleSendMessage = (type, message, to, to_username) => {
               if(to === to_username)
               type = "channel";
               if (type === 'pv') {
-                console.log("on envoie un msg la")
-                console.log(activeTab)
                 socket.emit('private message', {
                   content: message,
                   to: to,
@@ -107,30 +54,17 @@ const BeginChat = () => {
                   };
                   setActualDm(updatedChat);
                 }
-                StockMessages(type, {who: username, content:message}, to_username, "");
+                else  
+                  setActualDm(updatedMsg);
               } else {
                 socket.emit('group_chat', {
                   rooms_name: to,
                   content: message,
                 });
-                console.log("handleMessage: display =" + selectedChannel.display);
-                // UpdateSelectedChannel(channelsList);
               }
-              //   console.log("(SelectedChannel pb) Ton channel est = " + selectedChannel.chat_name);
               setMsg('');
             };
-            // const username  = localStorage.getItem('userName');
-            // const avatar = localStorage.getItem('avatar');
-            const Connection = () =>
-            {
-              // setDouille(false);
-            }
-            
-            
-            // console.log("Ton username = " + username);
-            // socket.auth = { username };
-            // if(username)
-            //   socket.connect();
+
             const username = localStorage.getItem('userName');
             if(username)
             {
@@ -139,58 +73,38 @@ const BeginChat = () => {
               // socket.disconnect();
               socket.connect();
               if(!me){
-                console.log("je dois passer une fois")
                 socket.emit('my-info');
                 socket.emit("update-sessions");
                 socket.emit("channels")
               }
             }
-      useEffect(() => {
-        
+
+      useEffect(() => {   
       socket.on('session', (item) => {
         setUser(item.user_info);
         setBlock(item.block);
         setStalk(item.stalk);
       });
+
       socket.on('users', (users) => {
-        // for (let i = 0; i < users.length; i++) {
-        //   list.push(users[i]);
-        //   // console.log(list[i].connected);
-        // }
-        console.log("Users = " + users)
         setList(users);
         if(activeTab)
         {
-          console.log("activeTAb username = " + activeTab.username);
           const active = users.find((element) => element.userId === activeTab.id)
           if(active)
           {
-            console.log("On est active")
             setActiveTab({id: active.userId, username: active.username, status: active.connected, avatar: active.user.avatar})
           }
         }
-        // users.find("") Je cherche ActiveTab;
       });
 
-      // socket.on("rooms_list", (channels_list) => {
-      //   console.log(channels_list);
-      //   SetRoomList(channels_list);
-      // })
-
       socket.on('rooms_list', (channelsList) => {
-        
-        console.log("channel_list"  + channelsList);
         UpdateSelectedChannel(channelsList);
         setChannelsList(channelsList);
-        
       });
 
       socket.on('private message', (message) =>
       {
-        console.log("On est dans pv le ssang")
-        StockMessages("pv", {who: message.from, content:message.content}, 
-        message.from, "" );
-        console.log("message de pv = " + message.content);
         if(dm)
         {
 
@@ -203,18 +117,10 @@ const BeginChat = () => {
       })
 
       socket.on("ActualDm", (chat) => { 
-        console.log("actual dm")
-        // if(activeTab)
-        // {
-          // console.log("T'as bien recu ton chat :" + chat.message);
           setActualDm(chat);
-        // }
       })
 
-
-      //SelectedChannel se mets pas a jour instantanement
       socket.on("IsProtected", (test) => {
-        console.log("on est dans isprotected");
         if(test)
         {
           SetMontre(true);
@@ -234,18 +140,16 @@ const BeginChat = () => {
 
       socket.on('messageFromRoom', (message) => {
         console.log("Dans la room on recoit :" + message.content + "de " + message.from);
-        StockMessages("room", {who: message.from, content: message.content}, message.to, "");
-        // setContent(prevState => [...prevState, message])
       });
 
       socket.on('group_chat_rep', (rep) => {
         console.log(rep);
       });
+
       socket.on('user disconnected', (userId) => {
         list.find((user) => user.userId === userId).connected = false;
-        console.log(`${userId} is disconnected`);
-        // socket.disconnect();
       });
+      
       return () => {
         socket.off("block");
         socket.off('user disconnected');
@@ -257,9 +161,8 @@ const BeginChat = () => {
         socket.off('messageFromRoom');
         socket.off('IsProtected');
       };
-    }, [socket, list, username, channelsList, displayChannel, dm, list_act]);
+    });
 
-    
     const Join_rooms = () => {
       setShowModalCreateChat(false);
       console.log('Lets create a group');
@@ -304,16 +207,12 @@ const BeginChat = () => {
         .then((data) => {
           console.log(data);
           if(data.data === null)
-            console.log("no ennemies")
-            
-            // setRes(data)
             socket.emit('my-info');
             socket.emit("update-sessions");
             socket.emit("block", to_block);
         })
     }  
 
-    
     const ShowProfile = (see_user) => 
     {
       const url = "/profile/" + see_user;
@@ -328,7 +227,7 @@ const BeginChat = () => {
           method: 'POST', 
           headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ nickname: name,}),   
-        }) //Si tu veux changer que le nickname il te suffit d'enlever l'avatar de l'objet
+        })
         .then((response) => {
           if (response.ok) {
           console.log(response.ok);
@@ -374,17 +273,6 @@ const BeginChat = () => {
     }
   }
 
-
-
-  // const handleSearchChange = (event) => {
-  //   const searchString = event.target.value;
-  //   Onsearch(searchString);
-  // };
-
-  const onSubmit = () => {
-    setMsg("");
-  };
-
   const NewConv = (user_name) => {
     if(user_name)
     {
@@ -399,28 +287,14 @@ const BeginChat = () => {
   }
 
   const InviteGame = (opponent) => {
-    // if(opponent.connected === "online")
-    // {
       setshowModal(false);
       console.log("opponent = " + opponent);
       socket.emit("InviteToGame", {opponent: opponent});
-      // socket.on("GameAccepted", () => {
-      //   console.log("Game accepté pureeeee");
-      //   navigate('/game');
-      //   // setTimer(0);
-      //   // setDisplay(true);
-      //   // setInvitor('');
-      //   // setAccepted(true);
-      // })
-    // }
   }
 
 
   const BeAdmin = (username, channel) => {
-    // if(getAdminStatus(me.username, channel) === " (Admin) " || channel.owner_group_chat === me.username)
-    // {
       socket.emit("Admin", {new_admin: username, chat: channel});
-    // }
   }
 
   const DeblockUser = (name) => {
@@ -444,31 +318,16 @@ const BeginChat = () => {
       socket.emit("update-sessions");
       socket.emit("my-info");
       socket.emit("block", name);
-      // setRes(data)
     })
   }
 
-
   const BlockedUser = (username) => {
-
-    // if(me.user.blacklist.some((admin) => admin.blockerId === me.username) && 
-    //       me.user.blocklist.some((admin) => admin.blockerId === username))
-    //       return true;
-    
-    // if(me.user.blacklist)
-    // {
-    //   console.log("je check si tu es bloqy1")
-    console.log("me = " + me);
-      return block.some((admin) => admin.blockerId === username) ? true : false;
+    return block.some((admin) => admin.blockerId === username) ? true : false;
   }
 
   const StalkerUser = (username) => {
-    // console.log("StalkerUser " + username);
-    
-        return stalk.some((admin) => admin.userId === username)  ? true : false;
-    
+    return stalk.some((admin) => admin.userId === username)  ? true : false;
   }
-
 
   const AdminRights = (username, channel, action) => {
     if(getAdminStatus(me.username, channel) !== "Non admin ")
@@ -494,36 +353,19 @@ const BeginChat = () => {
   }
 
   const EnterPassword = (pwd) => {
-    console.log("EnterPassword: begin")
-    console.log("EnterPassword: " + selectedChannel.protected)
     socket.emit("protected_channel", {
       mdp: pwd,
       channel: selectedChannel,
     });
     SetVerif('');
-    // if(selectedChannel.protected === pwd)
-    // {
-    //   // SetDisplay(true);
-    //   selectedChannel.display = true;
-    // //   console.log("EnterPassword 1: " + displayChannel);
-    //   return true;
-    // }
-    // SetVerif('');
-    // // SetDisplay(false);
-    // selectedChannel.display = false;
-    // // console.log("EnterPassword 2: " + displayChannel);
-    // return false;
   }
 
   const UpdateSelectedChannel = (channelsList) => {
     if(selectedChannel)
     {
-      console.log("UpdateSelectedChannel: begin")
       const update = channelsList.find((admin) => admin.chat_name === selectedChannel.chat_name);
       if(update)
       {
-        console.log("UpdateSelectedChannel: update existe  = " + update);
-        // SelectChannel(update);
         SetDisplay(update);
         if(!update.protected)
         {
@@ -532,15 +374,7 @@ const BeginChat = () => {
         else
         {
           SetMontre(false);
-
         }
-        // selectedChannel.display = true;
-        // if(update.protected)
-        // {
-        //     console.log("UpdateSelectedChannel: protected true");
-        //   selectedChannel.display = false;
-        // }
-        
       }
     }
   }
@@ -563,11 +397,9 @@ const BeginChat = () => {
     return true;
   }
 
-
   const getBannedStatus = (username, channel) => {
     return channel.banned.some((admin) => admin.username === username) ? true : false;
   }
-
 
   const getAdminStatus = (username, channel) => {
     if(username === channel.owner_group_chat)
@@ -585,7 +417,6 @@ const BeginChat = () => {
   const ConvSelected = (channel, dm) =>{
     if(channel)
     {
-      // console.log("Message = "+ channel.message)
       setActiveTab('');
       SelectChannel(channel);
       SetDisplay(channel);
@@ -593,13 +424,11 @@ const BeginChat = () => {
       {
         channel.display = false;
         SetMontre(false);
-        // SetDisplay(false);
       }
       else
       {
         channel.display = true;
         SetMontre(true);
-        // SetDisplay('');
       }
     }
     else if(dm)
@@ -615,28 +444,11 @@ const BeginChat = () => {
       setActiveTab('');
       SelectChannel(null);
       SetDisplay(null);
-      // SetDisplay(true);
     }
   }
 
- const AreYouUpdated = () => {
-  if(selectedChannel === displayChannel)
-  {
-    console.log("Selected === display");
-    return selectedChannel;
-  }  
-  else
-  {
-    const found = displayChannel.find((channel) => channel.chat_name === selectedChannel.chat_name);
-    console.log(found);
-    return found;
-  }
- }
-
-
   const handleCheckboxChange = () => {
-    // SetPwd(!password);
-    SetChecked(!checked_pwd)// Toggle the value of password
+    SetChecked(!checked_pwd)
   };
 
   const handlePasswordChange = (event) => {
@@ -646,11 +458,8 @@ const BeginChat = () => {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
-{/* <button className="big-button" onClick={findRoom}>PLAY</button> */}
-  // <Modal onClose={() =>setshowModal(false)} show={showModal}><p>Waiting for another player</p></Modal>
 
     return (
-      // <div>
       <div className="bodo">
         <Header/>    
             <div className="containo">
@@ -694,7 +503,6 @@ const BeginChat = () => {
                           onChange={e => handlePasswordChange(e)}
                           />
                           <span>
-
                         <button className="create_button" onClick={() => handleTogglePassword()} >
                           {showPassword ? 'Hide' : 'Show'}
                         </button>
@@ -703,11 +511,8 @@ const BeginChat = () => {
                         )}
                         </div>
                       </CreateConv>
-                      
                   </div>
-
               </div>
-
             <div className="small-div-r">
               {activeTab && (
                 <div className="new_who">
@@ -723,8 +528,7 @@ const BeginChat = () => {
                   {selectedChannel.chat_name}
                 </div>
               )}
-            </div>
-                      
+            </div> 
           </div>
           <div className="last-divs-container">
                   <div className="last-div">
@@ -741,7 +545,6 @@ const BeginChat = () => {
                               <div className="avatar-container">
                                 <img src={user.user.avatar} alt="Avatar" />
                                 <span className={`dot ${ user.connected === "offline" ? 'offline' : (user.connected === 'online' ? "online" : "ingame")}`}></span>
-                                {/* <span className={`dot ${ activeTab.status === "offline" ? 'offline' : (activeTab.status === 'online' ? "online" : "ingame")}`}></span> */}
                               </div>
                               <div className="username">{user.username}</div>
                             </button>         
@@ -756,11 +559,9 @@ const BeginChat = () => {
                       <li key={index}>
                   <button
                     className={selectedChannel === channel ? 'tablinks active' : 'tablinks'}
-                    // onClick={() => SelectChannel(channel)}
                     onClick={() => ConvSelected(channel, false)}
                     >
                       <div className="username">#{channel.chat_name} </div>
-          
                    </button>
                       </li>
                   ))}
@@ -768,14 +569,10 @@ const BeginChat = () => {
                 </div>
                   </div>
                   <div className="last-div-r">
-                  
                   {activeTab && CanWeTalk(activeTab.username) === true &&(
                     <div className="div-r-sup">
-                       
                         <div className="div-r-sup">
                         {dm && dm.message.map((message, index) => (
-                            
-
                             <div key={index} className="div-r-sup">
                             {message.from === username ? (
                               <>
@@ -794,43 +591,18 @@ const BeginChat = () => {
                             )}
                             </div>
                           ))}
-                          {/* {conversations[activeTab.username]?.messages.map((message, index) => (
-                            
-
-                            <div key={index} className="div-r-sup">
-                            {message.who === username ? (
-                              <>
-                                <p className="sender__name">You</p>
-                                <div className="message__sender">
-                                  {message.content}
-                                </div>
-                              </>
-                            ) : ( 
-                              <>
-                                <p className="receiver__name">{message.who}</p>
-                                <div className="message__recipient">
-                                  {message.content}
-                                </div>
-                              </>
-                            )}
-                            </div>
-                          ))} */}
                           </div>
                     </div>
                   )}
-
                {activeTab && CanWeTalk(activeTab.username)}
-
         { activeTab && !StalkerUser(activeTab.username) && !BlockedUser(activeTab.username) && (
                 <div>
                   <div className="chat_bar" style={{position: "fixed",  flexWrap: "nowrap"}}>
-                      <input className="foot" 
-                      // style={{width : "80%",}}
+                      <input className="foot"
                         type="text"
                         placeholder="Type msg"
                         value={msg}
                         onChange={e => setMsg(e.target.value)}
-                        // onKeyDown={handleTyping}
                         />
                       <button  onClick={() => handleSendMessage("pv", msg, activeTab.id, activeTab.username) }>
                         Send
@@ -838,14 +610,11 @@ const BeginChat = () => {
                       </div>
                     </div>
                     )}
-
                       {selectedChannel && (getBannedStatus(me.username, selectedChannel) || (displayChannel && getBannedStatus(me.username, displayChannel)) )&& (
                         <p>You are banned from {selectedChannel.chat_name}</p>
                       )}
-
                       { selectedChannel  && (!getBannedStatus(me.username, selectedChannel)  || (displayChannel && !getBannedStatus(me.username, displayChannel)) ) && selectedChannel.protected &&
                       !selectedChannel.display && !montre && (
-                       
                           <div className="create_chat">
                             <label>Please enter the password of this channel
                          <input
@@ -856,23 +625,17 @@ const BeginChat = () => {
                            onChange={(e) => SetVerif(e.target.value)}
                            />
                            </label>
-                           
                            <button className="create_button" onClick={() => handleTogglePassword()}>
                              {showPassword ? 'Hide' : 'Show'}
                            </button>
-                           
                            <button onClick={() => EnterPassword(verif)}>Submit</button>
-                           
                            </div>    
                       )}
-                      
                       {selectedChannel && !getBannedStatus(me.username, displayChannel) && selectedChannel.display 
                         && PrivateChannel(selectedChannel) &&
                          (
-                      // <div className="tabi">
                            <div className="div-r-sup">
                         { displayChannel &&  selectedChannel.chat_name === displayChannel.chat_name && displayChannel.message.map((message, index) => (
-                              
                               <div key={index} className="div-r-sup">
                               {  message.from === username ? (
                                 <>  
@@ -894,69 +657,26 @@ const BeginChat = () => {
                                 </>
                               )}
                               </div>
-
                     ))}
-                          {/* {conversations[selectedChannel.chat_name]?.messages.map((message, index) => (
-                              
-                                    <div key={index} className="div-r-sup">
-                                    {  message.who === username ? (
-                                      <>
-                                      {getMutedStatus(message.who, selectedChannel) === "Non muted" &&  (
-                                          <>
-                                        <p className="sender__name">You</p>
-                                        <div className="message__sender">
-                                        {message.content}
-
-                                        </div>
-                                        </>
-                                        )}
-                                      </>
-                                    ) : (
-                                      <>
-                                        {getMutedStatus(message.who, selectedChannel) === "Non muted" 
-                                              && !StalkerUser(message.who) && !BlockedUser(message.who) && (
-                                          <>
-                                        <p className="receiver__name">{message.who}</p>
-                                        <div className="message__recipient">
-                                        {message.content}
-                                              
-                                              
-                                        </div>
-                                        </>
-                                        )}
-                                      </>
-                                    )}
-                                    </div>
-
-                          ))} */}
                           </div>
-                          // </div>
                           )}
-                              
                         { selectedChannel &&  selectedChannel.display && displayChannel &&  displayChannel.chat_name === selectedChannel.chat_name 
                          && getMutedStatus(me.username, displayChannel) === "Non muted"  &&!getBannedStatus(me.username, displayChannel) && (
                          <div className="chat_bar" style={{position: "fixed",  flexWrap: "nowrap"}}>
-                         {/* style={{display: "flex", flexWrap: "nowrap"}} */}
-                     
                       <input className="foot" 
-                      // style={{width : "80%"}}
                         type="text"
                         placeholder="Type msg"
                         value={msg}
                         onChange={e => setMsg(e.target.value)}
-                        // onKeyDown={handleTyping}
                         />
                       <button  onClick={() => handleSendMessage("channel", msg, selectedChannel.chat_name, selectedChannel.chat_name) }>
                         Send
                       </button>
-                     
                       </div>)}
                   </div>
-
                   <div className="last-divi">
                       <div className="msg_pv" style={{color:"white"}}>Members</div><br/>
                     <div className="tabi">
-                      
                     { selectedChannel && displayChannel &&  displayChannel.chat_name === selectedChannel.chat_name  && selectedChannel.display && (
                       <div>
                         <ul>
@@ -985,7 +705,6 @@ const BeginChat = () => {
                                 </div>
                           ))}
                           </div>
-                         
                             <CreateConv onClose={() =>setshowModal(false)} show={showModal} title={profile.username}>
                             <button onClick={() => InviteFriend(profile.username)}>Invite Friend</button>
                             {profile && profile.connected === "online" && (
@@ -1016,10 +735,7 @@ const BeginChat = () => {
                                     <button onClick={() => AdminRights(profile, displayChannel, "UnbanUser")}>UnBan</button>
                                   </>
                                 )}
-                              
-
                               </div>
-
                             )}
                             </CreateConv>
                         </ul>
@@ -1047,9 +763,6 @@ const BeginChat = () => {
                       <button className="conv_btn" onClick={() => LeaveChat(displayChannel)}>Leave</button>
                     </div>
                     )}
-                    {/* {getAdminStatus(user.username, selectedChannel.admins)} */}
-
-
                     {activeTab && (
                       <div className="mini_profile">
                           <div className="mini"> 
@@ -1061,31 +774,21 @@ const BeginChat = () => {
                            </div>
                               <button onClick={() => ShowProfile(activeTab.username)}>Show Profile</button>
                               <button onClick={() => InviteFriend(activeTab.username)}>Invite Friend</button>
-                              {/* <br/> */}
                               {
                                 activeTab.status === 'ingame' ? 
                                 <div >Watch game</div>  : (activeTab.status === 'online' ? <button onClick={() => InviteGame(activeTab.username)}>Invite Game</button> : <></>) 
                               }
-                              {/* Watch game ou invite game */}
-                              {/* <br/> */}
                               {activeTab && CanWeTalk(activeTab.username) === true? 
                                 <button className="conv_btn" onClick={() => BlockUser(activeTab.username)}>Block User</button>
                                : 
                                 <button className="conv_btn" onClick={() => DeblockUser(activeTab.username)}>Deblock User</button>
-                              
                             }
-                              
-
                         </div>  
                     )}
                    </div>
-                  
           </div>
       </div>
-      // </div>
-
-
     );
-    }
-    
+}
+ 
 export default BeginChat;
