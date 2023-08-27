@@ -86,11 +86,32 @@ const Pong = () => {
             socket.off('Opponent_found');
             // socket.off('session');
         };
-    }, [socket, playerNumber, roomfull]);
+    }, [socket, playerNumber, roomfull, username]);
 
-        const startGameIfRoomFull = () => {
-        if (roomfull === true)
-        {
+    //     const startGameIfRoomFull = () => {
+    //     if (roomfull === true)
+    //     {
+    //         setshowModal(false);
+    //         setGameStarted(true);
+    //         setButtonVisible(false);
+    //         const newBallY = Height / 2;
+    //         const newBallX = Width / 2; 
+    //         setPlayer1Score(0);
+    //         setPlayer2Score(0);
+    //         setBallY(newBallY);
+    //         setBallX(newBallX);    
+    //         setGameOver(false);
+    //         setWinner("");
+    //         startGame();
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     startGameIfRoomFull();
+    //   }, [roomfull]);
+
+    useEffect(() => {
+        if (roomfull){
             setshowModal(false);
             setGameStarted(true);
             setButtonVisible(false);
@@ -102,13 +123,21 @@ const Pong = () => {
             setBallX(newBallX);    
             setGameOver(false);
             setWinner("");
-            startGame();
+            socket.emit("ballMovement", ({rooms_name: roomName, content : {
+                ballX: Width/2,
+                ballY: Height /2,
+                player1Score: 0,
+                player2Score: 0,
+                ballSpeedY :ballSpeedY,
+                ballSpeedX : ballSpeedX,
+            }}));
+            socket.emit("paddleMovement", ({rooms_name: roomName, content : {
+                paddle1Y : Height/2 - (paddleWidth/2),
+                paddle2Y : Height / 2 - (paddleWidth/2),
+            }}));
+            setRoomfull(false);
         }
-    };
-
-    useEffect(() => {
-        startGameIfRoomFull();
-      }, [roomfull]);
+      }, [roomfull, Height, Width, ballSpeedX, ballSpeedY, roomName,socket])
 
     
 
@@ -426,26 +455,26 @@ const Pong = () => {
         return null;
     };
 
-    const startGame = () => {
-        setPlayer1Score(0);
-        setPlayer2Score(0);
-        setGameOver(false);
-        setWinner("");          
-        setBallY(Height/2);
-        setBallX(Width/2);
-        socket.emit("ballMovement", ({rooms_name: roomName, content : {
-            ballX: Width/2,
-            ballY: Height /2,
-            player1Score: 0,
-            player2Score: 0,
-            ballSpeedY :ballSpeedY,
-            ballSpeedX : ballSpeedX,
-        }}));
-        socket.emit("paddleMovement", ({rooms_name: roomName, content : {
-            paddle1Y : Height/2 - (paddleWidth/2),
-            paddle2Y : Height / 2 - (paddleWidth/2),
-        }}));
-    };
+    // const startGame = () => {
+    //     setPlayer1Score(0);
+    //     setPlayer2Score(0);
+    //     setGameOver(false);
+    //     setWinner("");          
+    //     setBallY(Height/2);
+    //     setBallX(Width/2);
+    //     socket.emit("ballMovement", ({rooms_name: roomName, content : {
+    //         ballX: Width/2,
+    //         ballY: Height /2,
+    //         player1Score: 0,
+    //         player2Score: 0,
+    //         ballSpeedY :ballSpeedY,
+    //         ballSpeedX : ballSpeedX,
+    //     }}));
+    //     socket.emit("paddleMovement", ({rooms_name: roomName, content : {
+    //         paddle1Y : Height/2 - (paddleWidth/2),
+    //         paddle2Y : Height / 2 - (paddleWidth/2),
+    //     }}));
+    // };
 
     const NoWaitingAnymore = () => 
     {
