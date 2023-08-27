@@ -301,22 +301,24 @@ export class AuthService {
 
     async sendCookie(res: Response, key: string, value: string)
     {
-        res.cookie(key, value, {
-            httpOnly: false, //Because react need to use it too
-            maxAge: 14 * 24 * 60 * 60 * 1000,
-          })
-        //   res.cookie(key, value, {
+        // res.cookie(key, value, {
         //     httpOnly: true, //Because react need to use it too
         //     sameSite: 'none',
         //     secure: true,
         //     maxAge: 14 * 24 * 60 * 60 * 1000,
         //   })
+          res.cookie(key, value, {
+            httpOnly: false, //Because react need to use it too
+        
+            maxAge: 14 * 24 * 60 * 60 * 1000,
+          })
     }
 
     async deleteCookies(res: Response, key: string, value: string)
     {
         res.cookie(key, value, {
             httpOnly: false, //Because react need to use it too
+            
             maxAge: 1,
           })
     }
