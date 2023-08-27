@@ -36,7 +36,6 @@ export class GuardExceptionFilter implements ExceptionFilter {
             console.log('finito')
             response.cookie(exception.getData().key, exception.getData().value, {
               httpOnly: false, //Because react need to use it too
-              sameSite: 'none',
               maxAge: 1,
             })
             const final = "http://" + process.env.POST_LOCAL + ":" + process.env.PORT_FRONT;
