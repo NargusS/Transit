@@ -438,12 +438,12 @@ const Pong = () => {
             {giveUp && (
                 <footer>Opponent has given up the party...</footer>
             )}
-            <div>
-                <span htmlFor="colorPicker">Select a color:</span>
-                <select id="colorPicker" value={color} onChange={handleColorChange}>
+            <div style={{position: "fixed", bottom: 0, width: "100%", textAlign: "center"}}>
+                <span style={{color:"white"}} htmlFor="colorPicker">Select a color:</span>
+                <select style={{color:"white"}} id="colorPicker" value={color} onChange={handleColorChange}>
                     <option value="black">Black</option>
                     <option value="darkgreen">Dark Green</option>
-                    <option value="darkblue">Dark Blue</option>
+                    <option value="pink">Dark Blue</option>
                 </select>
             </div>
         </div>

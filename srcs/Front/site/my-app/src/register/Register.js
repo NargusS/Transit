@@ -24,6 +24,10 @@ function Register() {
       setNicknameError('Nickname cannot be empty.');
       return;
     }
+    if (nickname.size() > 20) {
+      setNicknameError("Nickname too long");
+      return ;
+    }
     if (!isValidNickname) {
       setNicknameError("Nickname contains invalid characters");
       return;
