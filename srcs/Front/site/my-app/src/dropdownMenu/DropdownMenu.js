@@ -5,42 +5,40 @@ import './DropdownMenu.css';
 
 const DropdownMenu = ({status_user}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const nickname = localStorage.getItem("userName");
+  const avatar = localStorage.getItem('avatar');
+
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-  const avatar = localStorage.getItem('avatar');
-
-  console.log("Status " + status_user)
+  
   const logOut = () => {
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/auth/logout";
     fetch(final, {
-            method: 'GET',
-            credentials: 'include', 
-            headers: {'Content-Type': 'application/json'}})
-        .then((response) => response.json())
-        .then((data) => {
-          if (data)
-          {
-            localStorage.removeItem("userName");
-            localStorage.removeItem("avatar");
-            localStorage.removeItem("2AF");
-            localStorage.removeItem("connected");
-            console.log("ciao");
-          }
-        });
+        method: 'GET',
+        credentials: 'include', 
+        headers: {'Content-Type': 'application/json'}})
+    .then((response) => response.json())
+    .then((data) => {
+      if (data)
+      {
+        localStorage.removeItem("userName");
+        localStorage.removeItem("avatar");
+        localStorage.removeItem("2AF");
+        localStorage.removeItem("connected");
+      }
+    });
   }
-  const [status, setStatus] = useState([]);
-  const nickname = localStorage.getItem("userName");
 
-  const GetMe = (name) => {
+  useEffect(() => {
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/users";
     fetch(final, {
       credentials: 'include', 
       method: 'POST', 
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
-      body: JSON.stringify({ nickname: name,}), 
+      body: JSON.stringify({ nickname: nickname,}), 
     })
     .then((response) => {
         console.log("GETALL: reponse bonne")
@@ -48,15 +46,8 @@ const DropdownMenu = ({status_user}) => {
         return response.json();
     })
     .then((data) => {
-      if(data.data){
-          setStatus(data.data.status);
-      }
     })
-  }
-    useEffect(() => {
-        GetMe(nickname);
-        console.log(status);
-      }, []);
+  }, [nickname]);
 
   return (
     <div className="dropdown">

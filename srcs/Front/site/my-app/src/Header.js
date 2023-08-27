@@ -12,15 +12,12 @@ const Header = () => {
   const navigate = useNavigate();
   const goHome= () => {navigate('/home');};
   const PageGame = () => {navigate('/game');};
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getAll, setGetAll] = useState([]);
   const [timer, setTimer] = useState(0);
   const [display, setDisplay] = useState(false);
-  const [gest, SetGest] = useState('');
   const [invitor, setInvitor] = useState('');
   const [accept, setAccepted] = useState('');
-  const [me, setMe] = useState('');
   const [status, setStatus] = useState('');
   
   const username = localStorage.getItem('userName');
@@ -65,16 +62,13 @@ const Header = () => {
       };
     });
     socket.on('TimeResponseInvite', (opponnent) => {
-      SetGest(opponnent);
       setTimer(30);
-      setInvitor(me);
       setDisplay(true);
     });
     socket.on("NoGame", () => {
       setDisplay(false);
       setTimer(0);
       setInvitor('');
-      SetGest('');
       setAccepted(false);
       RefuseGame();
     });
@@ -115,7 +109,7 @@ const Header = () => {
   return (
       <header>
         <div className="left-section">
-          <button className="modal-button" onClick={GetAll}><img src={Loupe} style={{height:"100%"}}/></button>
+          <button className="modal-button" onClick={GetAll}><img src={Loupe} style={{height:"100%"}} alt="loupe"/></button>
         </div>
         <div className="center-section">
           <h1 className="title" onClick={() => goHome()}>Ft_transcendence</h1>
