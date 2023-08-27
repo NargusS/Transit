@@ -109,7 +109,8 @@ const Live = () => {
             return () => {
                 clearInterval(liveLoop);
             }
-        }, [ballX, ballY, player1Score, player2Score, paddle1Y, paddle2Y]);
+        });
+        // }, [ballX, ballY, player1Score, player2Score, paddle1Y, paddle2Y]);
         return null;
     };
 

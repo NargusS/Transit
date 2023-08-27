@@ -84,18 +84,30 @@ function MyProfil () {
             if (data.data.statistic)
             {
                 setMatchHistory(data.data.statistic.player_history);
-                setAchievementString(data.data.statistic.achievement);
+                if (data.data.statistic.achievement !== achivementString)
+                {
+                    setAchievementString(data.data.statistic.achievement);
+                    const idsArray = data.data.statistic.achievement.split("");
+                    const updatedAchievements = achievements.map((achievement) =>
+                    idsArray.includes(String(achievement.id))
+                        ? { ...achievement, unlocked: true }
+                        : achievement
+                    );
+                    setAchievements(updatedAchievements);
+                }
                 setRank(data.data.statistic.rank);
             }
           })
-        const idsArray = achivementString.split("");
-        const updatedAchievements = achievements.map((achievement) =>
-        idsArray.includes(String(achievement.id))
-            ? { ...achievement, unlocked: true }
-            : achievement
-        );
-        setAchievements(updatedAchievements);
-      }, [achivementString, achievements, nickname]);
+          
+        // const idsArray = achivementString.split("");
+        // const updatedAchievements = achievements.map((achievement) =>
+        // idsArray.includes(String(achievement.id))
+        //     ? { ...achievement, unlocked: true }
+        //     : achievement
+        // );
+        // if(achievements !== updatedAchievements)
+        //     setAchievements(updatedAchievements);
+      }, [achivementString, achievements, nickname, rank, matchHistory]);
 
     return (
         <div>

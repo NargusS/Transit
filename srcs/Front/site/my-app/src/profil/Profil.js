@@ -91,49 +91,55 @@ function Profil() {
     })
   }
 
-  useEffect(() => {
-    const URL = "http://" + window.location.hostname + ":4000";
-    const final = URL + "/users/all";
+useEffect(() => {
+  const URL = "http://" + window.location.hostname + ":4000";
+      const final = URL + "/users/all";
     fetch(final, {
       credentials: 'include',
       method: 'GET',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setVisitor(data.data.find((item) => item.user === profileToUse));
-      })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      setVisitor(data.data.find((item) => item.user === profileToUse));
+    })
+  }, [profileToUse, visitor]);
 
-    if (visitor) {
-      const URL = "http://" + window.location.hostname + ":4000";
-      const final = URL + "/users";
-      fetch(final, {
-        credentials: 'include',
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname: visitor.user, }),
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.data.statistic) {
-          setMatchHistory(data.data.statistic.player_history);
+useEffect(() => {
+  if(visitor)
+  {
+    const URL = "http://" + window.location.hostname + ":4000";
+    const final = URL + "/users";
+    fetch(final, {
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname: visitor.user, }),
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+    if (data.data.statistic) {
+      setMatchHistory(data.data.statistic.player_history);
+      if (data.data.statistic.achievement !== achivementString)
+      {
           setAchievementString(data.data.statistic.achievement);
-          setRank(data.data.statistic.rank);
-        }
-      })
+          const idsArray = data.data.statistic.achievement.split("");
+          const updatedAchievements = achievements.map((achievement) =>
+          idsArray.includes(String(achievement.id))
+              ? { ...achievement, unlocked: true }
+              : achievement
+          );
+          setAchievements(updatedAchievements);
+      }
+      setRank(data.data.statistic.rank);
     }
-    const idsArray = achivementString.split("");
-    const updatedAchievements = achievements.map((achievement) =>
-      idsArray.includes(String(achievement.id))
-        ? { ...achievement, unlocked: true }
-        : achievement
-    );
-    setAchievements(updatedAchievements);
-  }, [visitor, achievements, achivementString, profileToUse]);
+  })
+  }
+}, [visitor, achivementString, achievements, rank, matchHistory]);
 
   return (
     <div>
