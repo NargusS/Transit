@@ -3,24 +3,14 @@ import DropdownMenu from './dropdownMenu/DropdownMenu';
 import {useNavigate} from 'react-router-dom';
 import Modal from '../src/modal/Modal';
 import { useSocket } from './SocketContext'; 
-// import { Socket } from 'socket.io-client';
 import SearchFriends from './SearchFriends/SearchFriends';
 
 
 const Header = () => {
   const socket = useSocket();
-  
   const navigate = useNavigate();
-  const goHome= () => {
-    // socket.disconnect();
-    navigate('/home');
-  };
-  
-  
-  const PageGame = () => {
-    // socket.disconnect();
-    navigate('/game');
-  };
+  const goHome= () => {navigate('/home');};
+  const PageGame = () => {navigate('/game');};
   
   
   const [isModalOpen, setIsModalOpen] = useState(false);
