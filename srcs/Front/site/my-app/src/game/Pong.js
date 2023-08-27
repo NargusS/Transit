@@ -492,7 +492,7 @@ const Pong = () => {
         {gameStarted && <GameLoop />}
         {gameOver && (<button className="big-button" onClick={() => Finish()}><span>DONE</span></button>)}
         {giveUp && (
-            <footer>Opponent has give up the party...</footer>
+            <footer>Opponent has given up the party...</footer>
             )}
         <div>
             <span htmlFor="colorPicker">Select a color:</span>

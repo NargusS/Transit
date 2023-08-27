@@ -10,7 +10,10 @@ import Loupe from './loupe-blanc-min.png';
 const Header = () => {
   const socket = useSocket();
   const navigate = useNavigate();
-  const goHome= () => {navigate('/home');};
+  const goHome= () => {
+    navigate('/home');
+    window.location.reload();
+  };
   const PageGame = () => {navigate('/game');};
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getAll, setGetAll] = useState([]);
@@ -20,6 +23,7 @@ const Header = () => {
   const [accept, setAccepted] = useState('');
   const [status, setStatus] = useState('');
   
+
   const username = localStorage.getItem('userName');
   if(username) {
     socket.auth = { username };
