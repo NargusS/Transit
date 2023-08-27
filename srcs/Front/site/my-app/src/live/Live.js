@@ -105,12 +105,12 @@ const Live = () => {
         useEffect(() => {
             const liveLoop = setInterval(() => {
                 drawAll();
-            }, 1000/60);
+            }, 1000/600);
             return () => {
                 clearInterval(liveLoop);
             }
+        // });
         });
-        // }, [ballX, ballY, player1Score, player2Score, paddle1Y, paddle2Y]);
         return null;
     };
 
