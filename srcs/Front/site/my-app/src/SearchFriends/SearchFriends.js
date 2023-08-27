@@ -108,7 +108,7 @@ function SearchFriends({ users, show, onClose }) {
               <div className="user-list">
                 {filteredUsers.map((user) => (
                   <div className="item" key={user.user}>
-                    <div >
+                    <div className='avatar-container'>
                       <img onClick={() => goProfile(user.user)} src={user.avatar} alt="Item"/>
                       <span className={`dot ${ user.status === 'ingame' ? "ingame" : "online"}`}></span>
                     </div>
