@@ -1,5 +1,5 @@
 import './Profil.css'
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../Header';
 import GotBeatenUp from './GotBeatenUp.png';
 import PongLooser from './PongLooser.png';
@@ -8,7 +8,7 @@ import PongLover from './PongLover.png';
 import PongMaster from './PongMaster.png';
 import { useParams } from 'react-router-dom';
 import NoPage from '../NoPage/NoPage';
-import '../test_mariah/Test_ultime/w3school.css';
+import '../chat/w3school.css';
 
 function Profil() {
   const { whichProfile } = useParams();
@@ -39,14 +39,14 @@ function Profil() {
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ friendName: name }),
     })
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-    .then((data) => {
-      if (data.data === null)
-        console.log("no friends")
-    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        if (data.data === null)
+          console.log("no friends")
+      })
   }
 
   const InviteFriend = (name) => {
@@ -58,17 +58,17 @@ function Profil() {
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ nickname: name, }),
     })
-    .then((response) => {
-      if (response.ok) {
-        console.log(response.ok);
-        return response.json();
-      } else {
-        console.log('Network response was not ok');
-      }
-    })
-    .then((data) => {
-      console.log('Response:', data);
-    })
+      .then((response) => {
+        if (response.ok) {
+          console.log(response.ok);
+          return response.json();
+        } else {
+          console.log('Network response was not ok');
+        }
+      })
+      .then((data) => {
+        console.log('Response:', data);
+      })
   }
 
   const DeleteFriend = (name) => {
@@ -80,66 +80,62 @@ function Profil() {
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ byefriend: name }),
     })
-    .then((response) => {
-      console.log("GETALL: reponse bonne")
-      console.log(response);
-      return response.json();
-    })
-    .then((data) => {
-      if (data.data === null)
-        console.log("no ennemies")
-    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.data === null)
+          console.log("no ennemies")
+      })
   }
 
-useEffect(() => {
-  const URL = "http://" + window.location.hostname + ":4000";
-      const final = URL + "/users/all";
+  useEffect(() => {
+    const URL = "http://" + window.location.hostname + ":4000";
+    const final = URL + "/users/all";
     fetch(final, {
       credentials: 'include',
       method: 'GET',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      setVisitor(data.data.find((item) => item.user === profileToUse));
-    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setVisitor(data.data.find((item) => item.user === profileToUse));
+      })
   }, [profileToUse, visitor]);
 
-useEffect(() => {
-  if(visitor)
-  {
-    const URL = "http://" + window.location.hostname + ":4000";
-    const final = URL + "/users";
-    fetch(final, {
-      credentials: 'include',
-      method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nickname: visitor.user, }),
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-    if (data.data.statistic) {
-      setMatchHistory(data.data.statistic.player_history);
-      if (data.data.statistic.achievement !== achivementString)
-      {
-          setAchievementString(data.data.statistic.achievement);
-          const idsArray = data.data.statistic.achievement.split("");
-          const updatedAchievements = achievements.map((achievement) =>
-          idsArray.includes(String(achievement.id))
-              ? { ...achievement, unlocked: true }
-              : achievement
-          );
-          setAchievements(updatedAchievements);
-      }
-      setRank(data.data.statistic.rank);
+  useEffect(() => {
+    if (visitor) {
+      const URL = "http://" + window.location.hostname + ":4000";
+      const final = URL + "/users";
+      fetch(final, {
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname: visitor.user, }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.data.statistic) {
+            setMatchHistory(data.data.statistic.player_history);
+            if (data.data.statistic.achievement !== achivementString) {
+              setAchievementString(data.data.statistic.achievement);
+              const idsArray = data.data.statistic.achievement.split("");
+              const updatedAchievements = achievements.map((achievement) =>
+                idsArray.includes(String(achievement.id))
+                  ? { ...achievement, unlocked: true }
+                  : achievement
+              );
+              setAchievements(updatedAchievements);
+            }
+            setRank(data.data.statistic.rank);
+          }
+        })
     }
-  })
-  }
-}, [visitor, achivementString, achievements, rank, matchHistory]);
+  }, [visitor, achivementString, achievements, rank, matchHistory]);
 
   return (
     <div>

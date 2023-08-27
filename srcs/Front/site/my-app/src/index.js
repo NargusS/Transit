@@ -9,7 +9,7 @@ import Register from './register/Register';
 import NoPage from './NoPage/NoPage';
 import { createRoot } from 'react-dom/client';
 import Live from './live/Live';
-import BeginChat from './test_mariah/Test_ultime/black_test';
+import BeginChat from './chat/black_test';
 import { SocketProvider } from './SocketContext';
 import Login from './Login';
 import LoginA2F from './LoginA2F';

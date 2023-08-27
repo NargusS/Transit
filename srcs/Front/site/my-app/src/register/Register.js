@@ -1,10 +1,10 @@
 import './Register.css'
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import avatarimg from '../avatar_default.png';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Register () {
-  if (!localStorage.getItem("userName")){
+function Register() {
+  if (!localStorage.getItem("userName")) {
     localStorage.setItem("connected", "no");
   }
   const [nickname, setNickname] = useState('');
@@ -14,53 +14,52 @@ function Register () {
   }
   const [nicknameError, setNicknameError] = useState('');
   const [avatarError, setAvatarError] = useState('');
-
   const [qrCodeImageUrl, setQrCodeImageUrl] = useState('');
-  const navigate = useNavigate();
   const alphanumericPattern = /^[a-zA-Z0-9]+$/;
   const isValidNickname = alphanumericPattern.test(nickname);
+  const navigate = useNavigate();
+
   const handleDone = () => {
     if (!nickname) {
       setNicknameError('Nickname cannot be empty.');
       return;
     }
-    if (!isValidNickname){
+    if (!isValidNickname) {
       setNicknameError("Nickname contains invalid characters");
-      return ;
+      return;
     }
     if (!avatar) {
       setAvatarError("Missing avatar");
-      return ;
+      return;
     }
-    const maxFileSize = 100 * 1024; // 100 KB in bytes
+    const maxFileSize = 100 * 1024;
 
-  // Convert the base64 string to a Blob
-  const blob = fetch(avatar).then(response => response.blob());
+    const blob = fetch(avatar).then(response => response.blob());
 
-  blob.then((imageBlob) => {
-    if (imageBlob.size > maxFileSize) {
-      setAvatar(avatarimg)
-      setAvatarError('Image too heavy');
-      return ;
-    }})
+    blob.then((imageBlob) => {
+      if (imageBlob.size > maxFileSize) {
+        setAvatar(avatarimg)
+        setAvatarError('Image too heavy');
+        return;
+      }
+    })
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/auth/set-nickname";
     fetch(final, {
-      credentials: 'include', 
-      method: 'POST', 
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ nickname: nickname, avatar: avatar}),
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname: nickname, avatar: avatar }),
     })
-       .then((response) => {
+      .then((response) => {
         if (response.ok) {
-          return response.json(); 
+          return response.json();
         } else {
           setNicknameError("Nickname is already in use");
         }
       })
       .then((data) => {
-        if(data.data)
-        {
+        if (data.data) {
           localStorage.setItem("connected", "yes");
           localStorage.setItem("userName", nickname);
           localStorage.setItem("avatar", avatar);
@@ -118,17 +117,17 @@ function Register () {
     if (newValue) {
       localStorage.setItem("2AF", "someValue");
       const URL = "http://" + window.location.hostname + ":4000";
-    const final = URL + "/auth/ga2f";
+      const final = URL + "/auth/ga2f";
       fetch(final, {
-        credentials: 'include', 
-        method: 'POST', 
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },    
-        })
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      })
         .then((response) => {
           if (response.ok) {
-            return response.json(); 
+            return response.json();
           } else {
-              console.log('Network response was not ok');
+            console.log('Network response was not ok');
           }
         })
         .then((data) => {
@@ -140,50 +139,49 @@ function Register () {
       const URL = "http://" + window.location.hostname + ":4000";
       const final = URL + "/auth/no-a2f";
       fetch(final, {
-        credentials: 'include', 
-        method: 'DELETE', 
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
+        credentials: 'include',
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       })
-      .then((response) => {
-        if (response.ok) {
-            console.log(response.ok);
-          return response.json(); 
-        } else {
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
             console.log('Network response was not ok');
-        }
-      })
-      .then((data) => {
-        console.log('Response:', data); 
-      })
+          }
+        })
+        .then((data) => {
+          console.log('Response:', data);
+        })
     }
   };
 
   return (
-        <div className='user-form-container'>
-            <div className="form" style={{backgroundColor:"aliceblue"}}>
-              <label>Nickname:</label>
-                <input type="text" value={nickname} onChange={handleNicknameChange} />
-                {nicknameError && <div className="error-message">{nicknameError}</div>}
-              <label>Avatar:</label>
-                <input type="file" accept="image/*" onChange={handleAvatarChange} />
-                <img src={avatar} alt="Avatar" className="avatar-preview" />
-                {avatarError && <div className='error-message'>{avatarError}</div>}
-                <div style={{backgroundColor:"aliceblue"}}>
-                  <label>2AF?</label>
-                  <br/>
-                  <label className="sliding-button">
-                    <input type="checkbox" checked={isChecked} onChange={handleToggle} />
-                    <span className="slider round"></span>
-                  </label>
-              </div>
-              <button onClick={handleDone}>Done</button>
-              <br/>
-            </div>
-            {qrCodeImageUrl && (   
-              <div className="qrcode" style={{ backgroundImage: `url(${qrCodeImageUrl})` }} />
-            )}
+    <div className='user-form-container'>
+      <div className="form" style={{ backgroundColor: "aliceblue" }}>
+        <label>Nickname:</label>
+        <input type="text" value={nickname} onChange={handleNicknameChange} />
+        {nicknameError && <div className="error-message">{nicknameError}</div>}
+        <label>Avatar:</label>
+        <input type="file" accept="image/*" onChange={handleAvatarChange} />
+        <img src={avatar} alt="Avatar" className="avatar-preview" />
+        {avatarError && <div className='error-message'>{avatarError}</div>}
+        <div style={{ backgroundColor: "aliceblue" }}>
+          <label>2AF?</label>
+          <br />
+          <label className="sliding-button">
+            <input type="checkbox" checked={isChecked} onChange={handleToggle} />
+            <span className="slider round"></span>
+          </label>
         </div>
-    ); 
+        <button onClick={handleDone}>Done</button>
+        <br />
+      </div>
+      {qrCodeImageUrl && (
+        <div className="qrcode" style={{ backgroundImage: `url(${qrCodeImageUrl})` }} />
+      )}
+    </div>
+  );
 };
 
 export default Register;

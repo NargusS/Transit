@@ -1,6 +1,5 @@
 import './Profil.css'
-// import Avatar from '../avatar_default.png';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Friends from '../friends/Friends';
 import Header from '../Header';
 import GotBeatenUp from './GotBeatenUp.png';
@@ -8,10 +7,8 @@ import PongLooser from './PongLooser.png';
 import MyFirstWin from './MyFirstWin.png';
 import PongLover from './PongLover.png';
 import PongMaster from './PongMaster.png';
-// import { useParams } from 'react-router-dom';
 
-
-function MyProfil () {
+function MyProfil() {
     const [showFriends, setshowFriends] = useState(false);
     const [showInviteFriend, setshowInviteFriend] = useState(false);
     const [friends, setFriends] = useState([]);
@@ -20,37 +17,37 @@ function MyProfil () {
     const avatar = localStorage.getItem('avatar');
 
     const initialAchievements = [
-        {id : 1, imgUrl: GotBeatenUp, unlocked : false, text : "Got Beaten Up"},
-        {id : 2, imgUrl: PongLooser, unlocked : false, text : "Pong Looser"},
-        {id : 3, imgUrl: MyFirstWin, unlocked: false, text : "My First Win"},
-        {id : 4, imgUrl: PongLover, unlocked : false, text : "Pong Lover"}, 
-        {id : 5, imgUrl: PongMaster, unlocked : false, text : "Pong Master"},
+        { id: 1, imgUrl: GotBeatenUp, unlocked: false, text: "Got Beaten Up" },
+        { id: 2, imgUrl: PongLooser, unlocked: false, text: "Pong Looser" },
+        { id: 3, imgUrl: MyFirstWin, unlocked: false, text: "My First Win" },
+        { id: 4, imgUrl: PongLover, unlocked: false, text: "Pong Lover" },
+        { id: 5, imgUrl: PongMaster, unlocked: false, text: "Pong Master" },
     ];
+
     const [achievements, setAchievements] = useState(initialAchievements);
-      
-      const GetAll = async () =>{
+
+    const GetAll = async () => {
         const URL = "http://" + window.location.hostname + ":4000";
-      const final = URL + "/users/all";
+        const final = URL + "/users/all";
         fetch(final, {
-            credentials: 'include', 
-            method: 'GET', 
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
-          })
-          .then((response) => {
-              return response.json();
-          })
-          .then((data) => {
-              if(data.data)
-              {
-                  const friendsData = data.data.filter((user) => user.isFriend === true);
-                  const invitedData = data.data.filter((user) => user.Already_invite === true);
-                  setFriends(friendsData);
-                  setinviteReceived(invitedData);
-                  
-              }
-          })
+            credentials: 'include',
+            method: 'GET',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.data) {
+                    const friendsData = data.data.filter((user) => user.isFriend === true);
+                    const invitedData = data.data.filter((user) => user.Already_invite === true);
+                    setFriends(friendsData);
+                    setinviteReceived(invitedData);
+
+                }
+            })
     }
-    
+
     const [matchHistory, setMatchHistory] = useState([]);
     const [achivementString, setAchievementString] = useState("");
     const [rank, setRank] = useState(0);
@@ -58,70 +55,56 @@ function MyProfil () {
     const handleShowFriends = () => {
         GetAll();
         setshowFriends(true);
-      };
+    };
 
-
-      const handleShowInviteFriends = () => {
+    const handleShowInviteFriends = () => {
         GetAll();
         setshowInviteFriend(true);
-      };
+    };
 
     useEffect(() => {
         const URL = "http://" + window.location.hostname + ":4000";
         const final = URL + "/users";
         fetch(final, {
-            credentials: 'include', 
-            method: 'POST', 
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ nickname: nickname,}), 
-          })
-          .then((response) => {
-              console.log("GETALL: reponse bonne")
-                console.log(response);
-              return response.json();
-          })
-          .then((data) => {
-            if (data.data.statistic)
-            {
-                setMatchHistory(data.data.statistic.player_history);
-                if (data.data.statistic.achievement !== achivementString)
-                {
-                    setAchievementString(data.data.statistic.achievement);
-                    const idsArray = data.data.statistic.achievement.split("");
-                    const updatedAchievements = achievements.map((achievement) =>
-                    idsArray.includes(String(achievement.id))
-                        ? { ...achievement, unlocked: true }
-                        : achievement
-                    );
-                    setAchievements(updatedAchievements);
+            credentials: 'include',
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nickname: nickname, }),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.data.statistic) {
+                    setMatchHistory(data.data.statistic.player_history);
+                    if (data.data.statistic.achievement !== achivementString) {
+                        setAchievementString(data.data.statistic.achievement);
+                        const idsArray = data.data.statistic.achievement.split("");
+                        const updatedAchievements = achievements.map((achievement) =>
+                            idsArray.includes(String(achievement.id))
+                                ? { ...achievement, unlocked: true }
+                                : achievement
+                        );
+                        setAchievements(updatedAchievements);
+                    }
+                    setRank(data.data.statistic.rank);
                 }
-                setRank(data.data.statistic.rank);
-            }
-          })
-          
-        // const idsArray = achivementString.split("");
-        // const updatedAchievements = achievements.map((achievement) =>
-        // idsArray.includes(String(achievement.id))
-        //     ? { ...achievement, unlocked: true }
-        //     : achievement
-        // );
-        // if(achievements !== updatedAchievements)
-        //     setAchievements(updatedAchievements);
-      }, [achivementString, achievements, nickname, rank, matchHistory]);
+            })
+    }, [achivementString, achievements, nickname, rank, matchHistory]);
 
     return (
         <div>
-            <Header/>
+            <Header />
             <div className='box'>
                 <div className='first-box'>
                     <div className="info">
-                        <img src={avatar} alt="avatar" style={{float : 'left'}}/>
-                        <div className='name' style={{float:'left'}}>{nickname}</div>
-                        <div className='name' style={{float:'right'}}>Points : {rank}</div>
+                        <img src={avatar} alt="avatar" style={{ float: 'left' }} />
+                        <div className='name' style={{ float: 'left' }}>{nickname}</div>
+                        <div className='name' style={{ float: 'right' }}>Points : {rank}</div>
                     </div>
                     <div className="showFriends">
                         <div className="clickable-text" onClick={handleShowFriends}>Friends list &#x25BE; </div>
-                        <br/>
+                        <br />
                         <div className="clickable-text" onClick={handleShowInviteFriends}>Invite Friend list &#x25BE; </div>
                     </div>
                 </div>
@@ -138,22 +121,22 @@ function MyProfil () {
                         ))}
                     </div>
                 </div>
-                <div className='first-box' style={{maxHeight:"400px", overflow:"auto"}}>
+                <div className='first-box' style={{ maxHeight: "400px", overflow: "auto" }}>
                     <p>match history</p>
                     <ul>
-                    {matchHistory.map((history) => (
-                        <li key={history.id}>
-                            {history.win === true ? (
-                                <p style={{color:"green"}}>Won against {history.opponent_nickname} : {history.my_score} - {history.opponent_score}</p>
+                        {matchHistory.map((history) => (
+                            <li key={history.id}>
+                                {history.win === true ? (
+                                    <p style={{ color: "green" }}>Won against {history.opponent_nickname} : {history.my_score} - {history.opponent_score}</p>
                                 ) : (
-                                <p style={{color:"red"}}>Lost against {history.opponent_nickname} : {history.my_score} - {history.opponent_score}</p>)}
-                        </li>
-                    ))}
+                                    <p style={{ color: "red" }}>Lost against {history.opponent_nickname} : {history.my_score} - {history.opponent_score}</p>)}
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>
-            <Friends onClose={() =>setshowFriends(false)} show={showFriends} friends={friends} title={"List of friends"}></Friends>
-            <Friends onClose={() =>setshowInviteFriend(false)} show={showInviteFriend} friends={inviteReceived} title={"List of invitations received"}></Friends>
+            <Friends onClose={() => setshowFriends(false)} show={showFriends} friends={friends} title={"List of friends"}></Friends>
+            <Friends onClose={() => setshowInviteFriend(false)} show={showInviteFriend} friends={inviteReceived} title={"List of invitations received"}></Friends>
         </div>
     );
 }

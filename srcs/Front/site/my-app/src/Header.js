@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DropdownMenu from './dropdownMenu/DropdownMenu';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../src/modal/Modal';
-import { useSocket } from './SocketContext'; 
+import { useSocket } from './SocketContext';
 import SearchFriends from './SearchFriends/SearchFriends';
 import Loupe from './loupe-blanc-min.png';
 
-
 const Header = () => {
   const socket = useSocket();
-  const navigate = useNavigate();
-  const goHome= () => {
-    navigate('/home');
-    window.location.reload();
-  };
-  const PageGame = () => {navigate('/game');};
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getAll, setGetAll] = useState([]);
   const [timer, setTimer] = useState(0);
@@ -22,21 +15,38 @@ const Header = () => {
   const [invitor, setInvitor] = useState('');
   const [accept, setAccepted] = useState('');
   const [status, setStatus] = useState('');
-  
-
   const username = localStorage.getItem('userName');
-  if(username) {
+  const navigate = useNavigate();
+
+  if (username) {
     socket.auth = { username };
     socket.connect();
     socket.emit("status");
   }
+
+  const PageGame = () => { navigate('/game'); };
+  const goHome = () => {
+    navigate('/home');
+    window.location.reload();
+  };
+
+  const AcceptGame = () => {
+    setDisplay(false);
+    socket.emit("GoGame", invitor);
+    PageGame();
+  }
+
+  const RefuseGame = () => {
+    setDisplay(false);
+  }
+
 
   useEffect(() => {
     if (timer > 0) {
       const countdown = setInterval(() => {
         setTimer(prevTimer => prevTimer - 1);
       }, 1000);
-  
+
       return () => clearInterval(countdown);
     }
     else
@@ -49,7 +59,6 @@ const Header = () => {
       setStatus(my_status);
     })
     socket.on("GameAccepted", () => {
-      console.log("Game accepté pureeeee");
       setTimer(0);
       setDisplay(true);
       setInvitor('');
@@ -57,10 +66,8 @@ const Header = () => {
       navigate('/game');
     })
     socket.on("InviteGame", (opponnent) => {
-      console.log("INviteGame: begin");
-      console.log(opponnent)
       setDisplay(true);
-      if(!invitor) {
+      if (!invitor) {
         setTimer(30);
         setInvitor(opponnent);
       };
@@ -84,52 +91,44 @@ const Header = () => {
     };
   })
 
-  const AcceptGame = () => {
-    setDisplay(false);
-    socket.emit("GoGame", invitor);
-    PageGame();
-  }
 
-  const RefuseGame = () => {
-    setDisplay(false);
-  }
-
-  const GetAll = async () =>{
+  const GetAll = async () => {
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/users/all";
     fetch(final, {
-        credentials: 'include', 
-        method: 'GET', 
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
+      credentials: 'include',
+      method: 'GET',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     })
-    .then((response) => {
+      .then((response) => {
         return response.json();
-    })
-    .then((data) => {
+      })
+      .then((data) => {
         setGetAll(data.data);
         setIsModalOpen(true);
-    })
+      })
   }
+
   return (
-      <header>
-        <div className="left-section">
-          <button className="modal-button" onClick={GetAll}><img src={Loupe} style={{height:"100%"}} alt="loupe"/></button>
-        </div>
-        <div className="center-section">
-          <h1 className="title" onClick={() => goHome()}>Ft_transcendence</h1>
-        </div>
-        <Modal onClose={() => RefuseGame()} show={display} title="Let's Play">
-          {invitor && (
-            <>
-              <button onClick={() => AcceptGame()}>Accept Invite</button>
-              <button onClick={() => RefuseGame()}>Refuse Invite</button>
-            </>
-          )}
-          {accept && PageGame()}
-        </Modal>
-        <DropdownMenu status_user={status}/>
-        <SearchFriends users={getAll} show={isModalOpen} onClose={() => setIsModalOpen(false)}/>
-      </header>
+    <header>
+      <div className="left-section">
+        <button className="modal-button" onClick={GetAll}><img src={Loupe} style={{ height: "100%" }} alt="loupe" /></button>
+      </div>
+      <div className="center-section">
+        <h1 className="title" onClick={() => goHome()}>Ft_transcendence</h1>
+      </div>
+      <Modal onClose={() => RefuseGame()} show={display} title="Let's Play">
+        {invitor && (
+          <>
+            <button onClick={() => AcceptGame()}>Accept Invite</button>
+            <button onClick={() => RefuseGame()}>Refuse Invite</button>
+          </>
+        )}
+        {accept && PageGame()}
+      </Modal>
+      <DropdownMenu status_user={status} />
+      <SearchFriends users={getAll} show={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </header>
   )
 }
 

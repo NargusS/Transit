@@ -7,7 +7,7 @@
 }
 
 .c {
-    background-color: #27282c;
+  background-color: #27282c;
   text-align: center;
   display: block;
   position: relative;
@@ -225,6 +225,7 @@ hr:after {
   0% {
     margin-left: 1000px;
   }
+
   100% {
     margin-left: -1000px;
   }
@@ -234,6 +235,7 @@ hr:after {
   0% {
     margin-left: 1000px;
   }
+
   100% {
     margin-left: -1000px;
   }
@@ -243,6 +245,7 @@ hr:after {
   0% {
     margin-left: 1000px;
   }
+
   100% {
     margin-left: -1000px;
   }
@@ -252,6 +255,7 @@ hr:after {
   0% {
     margin-left: 1000px;
   }
+
   100% {
     margin-left: -1000px;
   }

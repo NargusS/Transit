@@ -72,13 +72,13 @@
 }
 
 .friend {
-  height : 20px;
-  color : wheat;
+  height: 20px;
+  color: wheat;
   position: absolute;
 }
 
 .user-list p {
-  max-width : 100%;
+  max-width: 100%;
 }
 
 .overlay {
@@ -102,9 +102,9 @@
 }
 
 .item .avatar-container {
-    background-color: inherit;
-    position: relative;
-    float: left;
+  background-color: inherit;
+  position: relative;
+  float: left;
 }
 
 .item img {

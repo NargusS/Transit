@@ -2,7 +2,7 @@ import './Friends.css'
 import React from "react";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from 'react-router-dom';
-import '../test_mariah/Test_ultime/w3school.css';
+import '../chat/w3school.css';
 
 const Friends = props => {
   const navigate = useNavigate();
@@ -112,5 +112,5 @@ const Friends = props => {
     </div>
   );
 };
-  
-  export default Friends;
+
+export default Friends;

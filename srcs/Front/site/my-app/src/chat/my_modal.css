@@ -5,7 +5,6 @@
   right: 0;
   bottom: 0;
   background-color: rgba(28, 21, 61, 0.5);
-  /* background-color: rgb(43, 40, 40); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +12,7 @@
   transition: all 0.3s ease-in-out;
   pointer-events: none;
   z-index: 999999;
-  
+
 }
 
 .modal.enter-done {
@@ -27,17 +26,11 @@
 
 .modal-content {
   width: 500px;
-  /* background-color: #fff; */
   transition: all 0.3s ease-in-out;
   transform: translateY(-200px);
   padding: 20px;
   border-radius: 8px;
-  /* background-color: #27282c; */
   background-color: #3b3b41;
-
-  /* background-color: #fff;
-  max-width: 400px;
-  text-align: center; */
   text-align: center;
 }
 
@@ -55,36 +48,21 @@
 }
 
 .modal-title {
-  /* margin: 0; */
   justify-content: center;
   align-items: center;
   background-color: #3b3b41;
-
-  /* background-color: #fff; */
-
-
 }
 
 .modal-body {
   align-items: center;
   justify-content: center;
   padding: 30px 10px;
-  /* background-color: #27282c; */
   background-color: #3b3b41;
-
-  
 }
-
-/* .modal-button {
-  background-color: red;
-  color :#fff;
-} */
 
 .modal-content button {
   padding: 10px 20px;
   margin-right: 10px;
-  /* color:#fff; */
-  /* background: rgb(168, 48, 48); */
   font-weight: bold;
   border: #fff;
 }
@@ -95,5 +73,4 @@
 
 .modal p {
   background-color: inherit;
-  /* background-color: #fff; */
 }
