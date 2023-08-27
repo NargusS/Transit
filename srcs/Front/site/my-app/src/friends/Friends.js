@@ -1,121 +1,77 @@
 import './Friends.css'
-import React, { useEffect } from "react";
+import React from "react";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from 'react-router-dom';
 import '../test_mariah/Test_ultime/w3school.css';
 
-
 const Friends = props => {
   const navigate = useNavigate();
-      const closeOnEscapeKeyDown = e => {
-      if ((e.charCode || e.keyCode) === 27) {
-        props.onClose();
-      }
-    };
 
-    const handleProfileClick = (friend) => {
-      navigate('/profile/' + friend.user);
-    };
-    
-    const handleInviteClick = (friend) => {
-      console.log(`Inviting ${friend.user} to play a game`);
-    };
-    
-    const handleBlockClick = (friend) => {
-      // console.log(`Blocking ${friend.user}`);
-      const URL = "http://" + window.location.hostname + ":4000";
-      const final = URL + "/users/block";
-        fetch(final, {
-              credentials: 'include', 
-              method: 'POST', 
-              headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
-              body: JSON.stringify({blockedUser: friend.user }),
-            })
-          .then((response) => {
-              console.log("GETALL: reponse bonne")
-                console.log(response);
-              return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            if(data.data === null)
-              console.log("no ennemies")
-          })
-      }
-      const AddFriend = (name) => {
-        const URL = "http://" + window.location.hostname + ":4000";
-        const final = URL + "/users/friends";
-        fetch(final, {
-            credentials: 'include', 
-            method: 'POST', 
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
-            body: JSON.stringify({ friendName: name}),
-          })
-        .then((response) => {
-              console.log(response);
-            return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          if(data.data === null)
-            console.log("no friends")
-          // setRes(data)
-        })
+  const handleProfileClick = (friend) => {
+    navigate('/profile/' + friend.user);
+  };
+
+  const AddFriend = (name) => {
+    const URL = "http://" + window.location.hostname + ":4000";
+    const final = URL + "/users/friends";
+    fetch(final, {
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friendName: name }),
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        if (data.data === null)
+          console.log("no friends")
+      })
   }
 
   const InviteFriend = (name) => {
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/users/invitefriend";
-      fetch(final, {
-        credentials: 'include', 
-        method: 'POST', 
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ nickname: name,}),   
-      }) //Si tu veux changer que le nickname il te suffit d'enlever l'avatar de l'objet
+    fetch(final, {
+      credentials: 'include',
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname: name, }),
+    })
       .then((response) => {
         if (response.ok) {
-        console.log(response.ok);
-      return response.json(); 
+          console.log(response.ok);
+          return response.json();
         } else {
-        console.log('Network response was not ok');
-      }
+          console.log('Network response was not ok');
+        }
       })
       .then((data) => {
-        console.log('Response:', data); 
+        console.log('Response:', data);
       })
-    }
+  }
 
   const DeleteFriend = (name) => {
     const URL = "http://" + window.location.hostname + ":4000";
     const final = URL + "/users/deletefriend";
     fetch(final, {
-      credentials: 'include', 
-      method: 'DELETE', 
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },  
-      body: JSON.stringify({byefriend: name }),
+      credentials: 'include',
+      method: 'DELETE',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ byefriend: name }),
     })
-    .then((response) => {
-        console.log("GETALL: reponse bonne")
-          console.log(response);
+      .then((response) => {
         return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-      if(data.data === null)
-        console.log("no ennemies")
-      // setRes(data)
-    })
+      })
+      .then((data) => {
+        if (data.data === null)
+          console.log("no ennemies")
+      })
   }
 
-    // useEffect(() => {
-    //   document.body.addEventListener("keydown", closeOnEscapeKeyDown);
-    //   return function cleanup() {
-    //     document.body.removeEventListener("keydown", closeOnEscapeKeyDown);
-    //   };
-    // });
-  
-    return (
-      <div>
+  return (
+    <div>
       <CSSTransition
         in={props.show}
         unmountOnExit
@@ -129,36 +85,32 @@ const Friends = props => {
                 <li key={friend.user} className="friend-item">
                   <div className="friend-content">
                     <div className="avatar-container">
-                    <img src={friend.avatar} alt={`Avatar of ${friend.user}`} className="avatar" />
-                    <span className={`dot ${ friend.status === "offline" ? 'offline' : (friend.status === 'online' ? "online" : "ingame")}`}></span>
+                      <img src={friend.avatar} alt={`Avatar of ${friend.user}`} className="avatar" />
+                      <span className={`dot ${friend.status === "offline" ? 'offline' : (friend.status === 'online' ? "online" : "ingame")}`}></span>
                     </div>
-
                     <div className="nickname" >
                       <p onClick={() => handleProfileClick(friend)}>{friend.user}</p>
                     </div>
                   </div>
-                  <div className="button-group" style={{float:"right"}}>
-                  {friend.isFriend === true ? (
+                  <div className="button-group" style={{ float: "right" }}>
+                    {friend.isFriend === true ? (
                       <button className='buttonA' onClick={() => DeleteFriend(friend.user)}>Remove Friend</button>
-                      ) : friend.Already_invite ? (
-                          <button className='buttonA' onClick={() =>AddFriend(friend.user)}>Accept Invitation</button>
-                      ) : friend.Already_send ? (
-                        <p style={{backgroundColor:"wheat", color:"black"}}>Waiting</p>
-                      ) : (
-                      <button className="buttonA" onClick={() =>InviteFriend(friend.user)}>Invite friend</button>
-                  )}
-                    {/* {friend.isFriend === true ? <div>Remove Friend</div> : <div>Accept Invitation</div>}
-                    <div className="buttonA" onClick={() => handleInviteClick(friend)}>Invite</div> */}
-                    {/* <div className="buttonA" onClick={() => handleBlockClick(friend)}>Block</div> */}
+                    ) : friend.Already_invite ? (
+                      <button className='buttonA' onClick={() => AddFriend(friend.user)}>Accept Invitation</button>
+                    ) : friend.Already_send ? (
+                      <p style={{ backgroundColor: "wheat", color: "black" }}>Waiting</p>
+                    ) : (
+                      <button className="buttonA" onClick={() => InviteFriend(friend.user)}>Invite friend</button>
+                    )}
                   </div>
                 </li>
               ))}
             </ul>
-            </div>
           </div>
+        </div>
       </CSSTransition>
-      </div>
-    );
-  };
+    </div>
+  );
+};
   
   export default Friends;

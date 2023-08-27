@@ -102,7 +102,6 @@ function MyProfil () {
 
     useEffect(() => {
         GetMe(nickname);
-        // GetAll();
         updateAchievementUnlockStatus(achivementString);
       }, [achivementString]);
 
